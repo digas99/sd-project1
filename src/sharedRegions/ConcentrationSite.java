@@ -172,11 +172,14 @@ public class ConcentrationSite {
                 assaultParty.resetThieves();
                 assaultParty.setRoomID(getFreeRoom());
                 GenericIO.writelnString("Assault Party " + assaultParty.getId() + " is ready to go for " + assaultParty.getRoomID());
+                repos.setOrdinaryThiefRoomID(assaultPartyID,assaultParty.getRoomID());
+                
             }
             logger(this, thief, "joined "+ assaultParty);
         } catch (MemException e) {}
 
         // wake up next thief to join party or master if all thieves have joined
+
         notifyAll();
     }
 

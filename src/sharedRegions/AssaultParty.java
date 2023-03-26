@@ -89,6 +89,8 @@ public class AssaultParty {
       master.sentAnyAssaultParty(true);
 
       repos.setAssaultPartyID(id);
+      repos.setMasterThiefState(master.getThiefState());
+
 
       GenericIO.writelnString("\n|| Beginning " + this + " ||\nLOG FORMAT: [" + this + "][OrdinaryThief][SPEED][POS][MOVES]\n");
 
@@ -99,6 +101,8 @@ public class AssaultParty {
     public synchronized void reverseDirection() {
         OrdinaryThief thief = (OrdinaryThief) Thread.currentThread();
         thief.setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
+        repos.setOrdinaryThiefState(thief.getThiefID(), thief.getThiefState());
+
 
         loggerCrawl(this, thief, "ready to reverse direction");
         // if this was the last thief to reverse direction, notify the first party member to begin the crawling out
@@ -119,8 +123,8 @@ public class AssaultParty {
       } catch (ArrayIndexOutOfBoundsException e) {}
 
       thief.setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
+      repos.setOrdinaryThiefStatus(thief.getThiefID(), thief.getThiefState(), 'P', this.id,thief.getPosition(), 0);
 
-      repos.setOrdinaryThiefStatus(thief.getThiefID(), thief.getThiefState(), 'P', this.id, this.roomID,thief.getPosition(), 0);
 
        // first thief to arrive sets next thief as himself
       if (nextThiefID == -1) {
@@ -130,6 +134,8 @@ public class AssaultParty {
          thief.canMove(true);
 
          GenericIO.writelnString("\n" + room + " has " + room.getPaintings() + " paintings and is " + room.getDistance() + " steps away.\n");
+
+
       }
 
       do {
@@ -148,6 +154,7 @@ public class AssaultParty {
    public synchronized void crawlOut() {
        OrdinaryThief thief = (OrdinaryThief) Thread.currentThread();
        thief.setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
+       repos.setOrdinaryThiefState(thief.getThiefID(), thief.getThiefState());
 
        // if this is the first thief to start crawl out, reset his moves left
        if (thief.getThiefID() == thieves[0].getThiefID())
@@ -175,8 +182,7 @@ public class AssaultParty {
            //printPositions(); // if last thief, print final positions
         wakeUpNextThief(thief, backwards);
 
-
-       repos.setOrdinaryThiefPosition(thief.getThiefID(), thief.getPosition());
+        repos.setOrdinaryThiefPosition(thief.getThiefID(), thief.getPosition());
 
        if (thief.getPosition() == goal) { // check for end of path
            thief.setThiefState(endState);
@@ -195,6 +201,7 @@ public class AssaultParty {
      }
 
      int distanceToMove = min(thief.getDisplacement(), Math.abs(goal - thief.getPosition()), thief.getMovesLeft());
+     repos.setOrdinaryThiefDisplacement(thief.getThiefID(), thief.getDisplacement());
 
      // is front or middle thief, check the distance to the next thief
      boolean lastThief = !backwards ? isLastThief(thief) : isFirstThief(thief);
@@ -457,4 +464,6 @@ public class AssaultParty {
       }
       GenericIO.writelnString(print+"\n");
    }
+
+
 }

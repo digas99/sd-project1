@@ -1,4 +1,5 @@
 package sharedRegions;
+import java.util.Arrays;
 import java.util.Objects;
 import genclass.GenericIO;
 import genclass.TextFile;
@@ -95,7 +96,7 @@ public class GeneralRepos {
         ordinaryThiefRoomID = new int[N_ASSAULT_PARTIES];
         ordinaryThiefPosition = new int[N_THIEVES_ORDINARY];
         ordinaryThiefCanvas = new int[N_THIEVES_ORDINARY];
-        paintings = new int[N_ROOMS];
+        paintings = new int[N_THIEVES_ORDINARY];
         thiefDisplacement = new int[N_THIEVES_ORDINARY];
         distanceToRoom = new int[N_ROOMS];
 
@@ -172,7 +173,7 @@ public class GeneralRepos {
             System.exit(1);
         }
         log.writelnString("                                    Heist to the Museum - Description of the internal state");
-        log.writelnString(" "+"MstT    Thief 1      Thief 2      Thief 3      Thief 4      Thief 5      Thief 6");
+        log.writelnString(" "+"MstT    Thief 0      Thief 1      Thief 2      Thief 3      Thief 4      Thief 5");
         log.writelnString(" "+"Stat    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD    Stat S MD");
         log.writelnString("     "+"                Assault party 1                                  Assault party 2                                                 Museum");
         log.writelnString("     "+"      Elem 1         Elem 2        Elem 3                    Elem 1        Elem 2         Elem 3          Room 1      Room 2      Room 3      Room 4      Room 5");
@@ -229,59 +230,51 @@ public class GeneralRepos {
                     lineOne += "CLST";
                     break;
             }
-            lineOne += " " + ordinaryThiefSituation[i] + " " + thiefDisplacement[i] + "   ";
+            lineOne += " " + ordinaryThiefSituation[i] + " " + thiefDisplacement[i] + "      ";
             if(i == 5) lineOne += "\n";
         }
 
 
         for(int partyID = 0; partyID< N_ASSAULT_PARTIES; partyID++){
             // roomID
-            lineTwo += String.format("%2d", ordinaryThiefRoomID[partyID]) + "  ";
-            for (int thiefID = 0; thiefID < N_THIEVES_PER_PARTY; thiefID++) {
-                // if thief is in the party
-                if (ordinaryThiefAssaultPartyID[thiefID] == partyID) {
+            lineTwo += "     "+String.format("%2d", ordinaryThiefRoomID[partyID]) + "   ";
+            int[] thievesIDInParty = getThievesFromParty(partyID);
+            for (int thiefID : thievesIDInParty) {
+                if (thiefID != -1) {
                     lineTwo += String.format("%2d", thiefID) + "  ";
                     lineTwo += String.format("%2d", ordinaryThiefPosition[thiefID]) + "  ";
-                    lineTwo += String.format("%2d", ordinaryThiefCanvas[thiefID]) + "  ";
-                }
+                    lineTwo += String.format("%2d", ordinaryThiefCanvas[thiefID]) + "    ";
+                } else
+                    lineTwo += String.format("-1  -1  -1    ");
             }
         }
+        lineTwo +="  ";
 
         // museum
         for(int roomID = 0; roomID < N_ROOMS; roomID++){
+            lineTwo += "    ";
             lineTwo += String.format("%2d", paintings[roomID]) + "  ";
             lineTwo += String.format("%2d", distanceToRoom[roomID]) + "  ";
         }
-        log.writelnString(lineOne);
-        log.writelnString(lineTwo);
-
-
-
-       /* log.writelnString("-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
-
-        lineOne += String.format("%4d",masterThiefStates)+
-                "   "+ String.format("%4d", ordinaryThiefStates[0]) + "  "+String.format(s )+"  "+String.format("%1d",displacement) + "    " +
-                String.format("%4d", ordinaryThiefStates[1]) + "  "+String.format(s )+"  "+String.format("%1d",displacement) + "   " +
-                String.format("%4d", ordinaryThiefStates[2]) + "  "+String.format(s )+"  "+String.format("%1d",displacement) + "   " +
-                "\n" +
-                "    "+ String.format("%2d", roomID) + "  " + String.format("%2d", ids[0]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas)+ "  "+
-                "  " + String.format("%2d", ids[1]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas) + "  " +
-                "  " + String.format("%2d", ids[2]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas)+
-                "            " + String.format("%2d", roomID) + "  " + String.format("%2d", ids[0]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas) +"   "+
-                "  " + String.format("%2d", ids[1]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas) + "  " +
-                "  " + String.format("%2d", ids[2]) + "  " + String.format("%2d", position) + "  " + String.format("%2d", canvas) + "  " +
-                "      " + String.format("%2d",nPaintings ) + "  " + String.format("%2d", distance) +
-                "      " + String.format("%2d",nPaintings ) + "  " + String.format("%2d", distance) +
-                "      " + String.format("%2d",nPaintings ) + "  " + String.format("%2d", distance) +
-                "      " + String.format("%2d",nPaintings ) + "  " + String.format("%2d", distance) +
-                "      " + String.format("%2d",nPaintings ) + "  " + String.format("%2d", distance) ;
-        log.writelnString(lineOne);
-        */
+        log.writelnString(lineOne+lineTwo+"\n");
 
         if (!log.close()) {
             GenericIO.writelnString("The operation of closing the file " + logFile + " failed!");
             System.exit(1);
         }
+    }
+
+    private int[] getThievesFromParty(int partyID) {
+        int[] thieves = new int[N_THIEVES_PER_PARTY];
+        for (int i = 0; i < N_THIEVES_PER_PARTY; i++)
+            thieves[i] = -1;
+        int count = 0;
+        for (int thiefID : ordinaryThiefAssaultPartyID) {
+            if (thiefID == partyID)
+                thieves[count++] = thiefID;
+        }
+        GenericIO.writelnString("Thieves from party " + partyID + ": " + thieves[0] + " " + thieves[1] + " " + thieves[2]);
+        return thieves;
     }
 
     public void reportLegend() {
@@ -314,11 +307,10 @@ public class GeneralRepos {
     }
 
 
-    public synchronized void setOrdinaryThiefStatus(int id, int state, char situation, int assaultPartyID, int roomID, int position, int canvas){
+    public synchronized void setOrdinaryThiefStatus(int id, int state, char situation, int assaultPartyID, int position, int canvas){
         ordinaryThiefStates[id] = state;
         ordinaryThiefSituation[id] = situation;
         ordinaryThiefAssaultPartyID[id] = assaultPartyID;
-        ordinaryThiefRoomID[id] = roomID;
         ordinaryThiefPosition[id] = position;
         ordinaryThiefCanvas[id] = canvas;
         reportStatus();
@@ -360,7 +352,6 @@ public class GeneralRepos {
 
     public synchronized void setOrdinaryThiefPosition(int id, int position) {
         ordinaryThiefPosition[id] = position;
-        reportStatus();
         reportStatus();
     }
 
