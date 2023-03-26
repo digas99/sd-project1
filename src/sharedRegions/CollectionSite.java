@@ -65,7 +65,9 @@ public class CollectionSite {
 
         while (arrivedThieves.size() == 0 && master.getConcentrationSite().numberOfThieves() < N_THIEVES_ORDINARY) {
             try {
+                logger(this, master, "Waiting for thieves to arrive...");
                 wait();
+                logger(this, master, "Woke up! " + master.getConcentrationSite().numberOfThieves() + " thieves in site.");
             } catch (InterruptedException e) {}
         }
     }
@@ -96,8 +98,10 @@ public class CollectionSite {
         loggerCrawl(this, thief, "Handed canvas to master thief.");
 
         // if last thief from party handing a canvas, free room
-        if (partyThievesInSite[thief.getParty().getId()] == 0)
+        if (partyThievesInSite[thief.getParty().getId()] == 0) {
             ((OrdinaryThief) Thread.currentThread()).getConcentrationSite().setRoomState(thief.getParty().getRoomID(), FREE_ROOM);
+            notifyAll();
+        }
     }
 
     public synchronized void collectACanvas() {
