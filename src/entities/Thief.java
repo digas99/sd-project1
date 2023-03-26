@@ -40,6 +40,10 @@ public abstract class Thief extends Thread {
         return concentrationSite;
     }
 
+    public CollectionSite getCollectionSite() {
+        return collectionSite;
+    }
+
     public Thief(String threadName, int id, Museum museum, ConcentrationSite concentrationSite, CollectionSite collectionSite, AssaultParty[] assaultParties) {
         super(threadName);
 

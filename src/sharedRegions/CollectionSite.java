@@ -26,6 +26,10 @@ public class CollectionSite {
         return "Collection Site";
     }
 
+    public boolean[] getRoomsEmpty() {
+        return roomEmpty;
+    }
+
     public CollectionSite(GeneralRepos repos) {
         try {
             arrivedThieves = new MemFIFO<>(new Integer[N_THIEVES_ORDINARY]);
