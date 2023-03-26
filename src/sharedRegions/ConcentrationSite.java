@@ -41,6 +41,8 @@ public class ConcentrationSite {
         return thieves.size();
     }
 
+    private GeneralRepos repos;
+
     public ConcentrationSite(GeneralRepos repos) throws MemException {
         thieves = new MemFIFO<>(new Integer[N_THIEVES_PER_PARTY]);
         rooms = new int[N_ROOMS];
@@ -49,6 +51,7 @@ public class ConcentrationSite {
         assaultPartyID = joinedThieves = 0;
         endHeist = makeParty = false;
         assaultParty = null;
+        this.repos = repos;
     }
 
     public String toString() {

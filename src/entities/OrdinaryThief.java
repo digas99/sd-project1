@@ -1,10 +1,7 @@
 package entities;
 
 import genclass.GenericIO;
-import sharedRegions.AssaultParty;
-import sharedRegions.CollectionSite;
-import sharedRegions.ConcentrationSite;
-import sharedRegions.Museum;
+import sharedRegions.*;
 
 import static utils.Parameters.*;
 import static utils.Utils.*;
@@ -64,7 +61,7 @@ public class OrdinaryThief extends Thief {
         this.hasCanvas = hasCanvas;
     }
 
-    public OrdinaryThief(String threadName, int thiefID, Museum museum, ConcentrationSite concentrationSite, CollectionSite collectionSite, AssaultParty[] assaultParties) {
+    public OrdinaryThief(String threadName, int thiefID, Museum museum, ConcentrationSite concentrationSite, CollectionSite collectionSite, AssaultParty[] assaultParties, GeneralRepos repos) {
         super(threadName, thiefID, museum, concentrationSite, collectionSite, assaultParties);
         thiefState = OrdinaryThiefStates.CONCENTRATION_SITE;
         displacement = random(MIN_DISPLACEMENT, MAX_DISPLACEMENT);

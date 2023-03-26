@@ -59,7 +59,7 @@ public class Assault {
         for (int i = 0; i < N_THIEVES_MASTER; i++)
             masters[i] = new MasterThief("Master_" + i, i, museum, concentrationSite, collectionSite, assaultParties) ;
         for (int i = 0; i < N_THIEVES_ORDINARY; i++)
-            thieves[i] = new OrdinaryThief("Ordinary_" + i, i, museum, concentrationSite, collectionSite, assaultParties);
+            thieves[i] = new OrdinaryThief("Ordinary_" + i, i, museum, concentrationSite, collectionSite, assaultParties, repos);
 
         // start threads
         for (int i = 0; i < N_THIEVES_MASTER; i++)

@@ -58,7 +58,7 @@ public final class Parameters {
     /**
      * Number of Assault Parties.
      */
-    public static final int N_ASSAULT_PARTIES = 1;
+    public static final int N_ASSAULT_PARTIES = 2;
     /**
      * Number of thieves in each Assault Party.
      */
@@ -72,7 +72,7 @@ public final class Parameters {
     /**
      * Number of Ordinary Thieves.
      */
-    public static final int N_THIEVES_ORDINARY = 3;
+    public static final int N_THIEVES_ORDINARY = 6;
 
 
     /**

@@ -61,6 +61,10 @@ public class AssaultParty {
        nextThiefID = roomID = -1;
    }
 
+   public int size() {
+      return nThieves;
+   }
+
    public AssaultParty(int id, GeneralRepos repos) throws MemException {
       this.id = id;
       this.repos = repos;
@@ -115,10 +119,10 @@ public class AssaultParty {
       } catch (ArrayIndexOutOfBoundsException e) {}
 
       thief.setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
-      repos.setOrdinaryThiefState(thief.getThiefID(), OrdinaryThiefStates.CRAWLING_INWARDS);
-      repos.setOrdinaryThiefId(thief.getThiefID());
 
-      // first thief to arrive sets next thief as himself
+      repos.setOrdinaryThiefStatus(thief.getThiefID(), thief.getThiefState(), 'P', this.id, this.roomID,thief.getPosition(), 0);
+
+       // first thief to arrive sets next thief as himself
       if (nextThiefID == -1) {
          nextThiefID = thief.getThiefID();
          room = thief.getMuseum().getRoom(roomID);
@@ -144,7 +148,6 @@ public class AssaultParty {
    public synchronized void crawlOut() {
        OrdinaryThief thief = (OrdinaryThief) Thread.currentThread();
        thief.setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
-       repos.setOrdinaryThiefState(thief.getThiefID(), OrdinaryThiefStates.CRAWLING_OUTWARDS);
 
        // if this is the first thief to start crawl out, reset his moves left
        if (thief.getThiefID() == thieves[0].getThiefID())
