@@ -27,19 +27,6 @@ public class AssaultParty {
    private Mapping[] thieves;
 
    /**
-    * Get Array of thieves IDs in the Assault Party.
-    *
-    * @return Array of thieves IDs
-    */
-   public int[] getThieves() {
-        int[] thieves = new int[N_THIEVES_PER_PARTY];
-        for (int i = 0; i < N_THIEVES_PER_PARTY; i++) {
-            thieves[i] = this.thieves[i].getThiefID();
-        }
-        return thieves;
-   }
-
-   /**
     * Get the ID of the Assault Party.
     *
     * @return ID of the Assault Party
